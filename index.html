@@ -1,0 +1,31 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grownseed - InDaClub</title>
+  <style>
+  * { margin: 0; padding: 0; }
+  body, html { height: 100%; min-height: 100%; }
+  </style>
+  <script>
+  setInterval(function() {
+    var d = [], n = Math.floor(Math.random() * 8) + 1, p = [], t = 0;
+
+    for (var i = 0; i < n; i++) {
+      var v = Math.floor(Math.random() * 100);
+      p.push(v);
+      t += v;
+    }
+
+    for (var j = 0; j < n; j++) {
+      d.push('#'+Math.floor(Math.random()*16777215).toString(16) + ' ' + Math.floor(p[j] * 100 / t) + '%');
+    }
+  
+    document.body.style.background = 'repeating-radial-gradient(' + d.join(',') + ')';
+  }, 200);
+  </script>
+</head>
+<body>
+</body>
+</html>
