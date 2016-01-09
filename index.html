@@ -6,33 +6,33 @@
   <title>Grownseed - InDaClub</title>
   <style>
   * { margin: 0; padding: 0; }
-  body, html { height: 100%; min-height: 100%; }
+  body, html { height: 100%; min-height: 100%; overflow: hidden; }
   .layer {
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    animation: fadein 0.5s;
-    -moz-animation: fadein 0.5s;
-    -webkit-animation: fadein 0.5s;
-    -o-animation: fadein 0.5s;
+    animation: fadein 0.5s linear;
+    -moz-animation: fadein 0.5s linear;
+    -webkit-animation: fadein 0.5s linear;
+    -o-animation: fadein 0.5s linear;
     position: absolute;
   }
   @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1.2); }
   }
   @-moz-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1.2); }
   }
   @-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1.2); }
   }
   @-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: scale(1); }
+    to   { opacity: 1; transform: scale(1.2); }
   }
   </style>
 </head>
@@ -63,7 +63,7 @@
     document.body.appendChild(bg);
 
     if (old) old.remove();
-  }, 500);
+  }, 400);
   </script>
 </body>
 </html>
