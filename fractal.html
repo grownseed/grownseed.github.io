@@ -1,0 +1,55 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grownseed - Basic Fractal</title>
+</head>
+<body>
+<script>
+var initial_size = 100,
+  max_depth = 6,
+  distance_ratio = 2.2,
+  color_step = Math.floor(16777215 / (max_depth * 3));
+
+function drawCircle(x, y, s, depth, color) {
+  var c = document.createElement('div'),
+    offset = Math.round(s / 2),
+    r = (color>>16)&0x0ff,
+    g = (color>>8)&0x0ff,
+    b = (color)&0x0ff,
+    bg_color = 'rgba(' + r + ', ' + g + ', ' + b + ', 0.4)';
+  c.setAttribute('style', 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + s + 'px; height: ' + s + 'px; border-radius: 50%; background-color: ' + bg_color + '; margin-left: -' + offset + 'px; margin-top: -' + offset + 'px;');
+  document.body.appendChild(c);
+
+  color += color_step;
+
+  return step(x, y, depth, color);
+}
+
+function step(x, y, depth, color) {
+  if (depth >= max_depth) return;
+
+  var size = Math.round(initial_size / depth),
+    distance = Math.round(size * distance_ratio);
+
+  depth++;
+
+  // top circle
+  drawCircle(x, y - distance, size, depth, color);
+
+  // right circle
+  drawCircle(x + distance, y, size, depth, color);
+
+  // bottom circle
+  drawCircle(x, y + distance, size, depth, color);
+
+  // left circle
+  drawCircle(x - distance, y, size, depth, color);
+
+  return;
+}
+
+step(Math.round(window.innerWidth / 2), Math.round(window.innerHeight / 2), 1, 0);</script>
+</body>
+</html>
