@@ -1,0 +1,48 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grownseed - Vanessa Fractal</title>
+</head>
+<body>
+<script>
+var initial_size = 180,
+  max_depth = 5,
+  distance_ratio = 1.8;
+
+function drawCircle(x, y, s, depth, angle) {
+  var c = document.createElement('div'),
+    offset = Math.round(s / 2);
+  c.setAttribute('style', 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + s + 'px; height: ' + s + 'px; border-radius: 50%; background-image: url("vanessa.jpg"); margin-left: -' + offset + 'px; margin-top: -' + offset + 'px; transform: rotate(' + angle + 'deg); -webkit-transform: rotate(' + angle + 'deg); background-repeat: no-repeat; background-size: cover; opacity: 0.8;');
+  document.body.appendChild(c);
+
+  return step(x, y, depth);
+}
+
+function step(x, y, depth) {
+  if (depth >= max_depth) return;
+
+  var size = Math.round(initial_size / depth),
+    distance = Math.round(size * distance_ratio);
+
+  depth++;
+
+  // top circle
+  drawCircle(x, y - distance, size, depth, 0);
+
+  // right circle
+  drawCircle(x + distance, y, size, depth, 90);
+
+  // bottom circle
+  drawCircle(x, y + distance, size, depth, 180);
+
+  // left circle
+  drawCircle(x - distance, y, size, depth, 270);
+
+  return;
+}
+
+step(Math.round(window.innerWidth / 2), Math.round(window.innerHeight / 2), 1);</script>
+</body>
+</html>
