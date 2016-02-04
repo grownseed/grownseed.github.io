@@ -1,0 +1,109 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grownseed - Basic Fractal</title>
+</head>
+<body>
+<label for="s1">source:</label>
+<input type="text" id="s1">
+<br>
+<label for="s2">destination:</label>
+<input type="text" id="s2">
+<br>
+<button id="c">=</button><strong id="score"></strong>
+<script>
+function soundex(s) {
+     var a = s.toLowerCase().split(''),
+         f = a.shift(),
+         r = '',
+         codes = {
+             a: '', e: '', i: '', o: '', u: '', y: '', h: '', w: '',
+             b: 1, p: 1,
+             c: 2, k: 2, q: 2,
+             d: 3, t: 3,
+             l: 4,
+             m: 5, n: 5,
+             r: 6,
+             g: 7, j: 7,
+             x: 8, z: 8, s: 8,
+             f: 9, v: 9
+         };
+ 
+     r = f +
+         a
+         .map(function (v, i, a) { return codes[v] })
+         .filter(function (v, i, a) {
+             return ((i === 0) ? v !== codes[f] : v !== a[i - 1]);
+         })
+         .join('');
+ 
+     return (r + '000').slice(0, 4).toUpperCase();
+}
+
+//https://gist.github.com/andrei-m/982927
+function levenshteinDistance (a, b) {
+  if(a.length == 0) return b.length; 
+  if(b.length == 0) return a.length; 
+
+  var matrix = [];
+
+  // increment along the first column of each row
+  var i;
+  for(i = 0; i <= b.length; i++){
+    matrix[i] = [i];
+  }
+
+  // increment each column in the first row
+  var j;
+  for(j = 0; j <= a.length; j++){
+    matrix[0][j] = j;
+  }
+
+  // Fill in the rest of the matrix
+  for(i = 1; i <= b.length; i++){
+    for(j = 1; j <= a.length; j++){
+      if(b.charAt(i-1) == a.charAt(j-1)){
+        matrix[i][j] = matrix[i-1][j-1];
+      } else {
+        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+                                Math.min(matrix[i][j-1] + 1, // insertion
+                                         matrix[i-1][j] + 1)); // deletion
+      }
+    }
+  }
+
+  return matrix[b.length][a.length];
+}
+
+function compare() {
+  var s1 = document.getElementById('s1').value, l1 = [],
+    s2 = document.getElementById('s2').value, l2 = [];
+  window.location.hash = encodeURIComponent(s1) + '|' + encodeURIComponent(s2);
+  s1.split(' ').forEach(function(w) {
+    l1.push(soundex(w));
+  });
+  s2.split(' ').forEach(function(w) {
+    l2.push(soundex(w));
+  });
+
+  var d = levenshteinDistance(l1.join(''), l2.join('')),
+    score = Math.round(d * 10000 / (s1.length || 1)) / 100;
+  document.getElementById('score').innerText = (100 - score) + '%';
+}
+
+document.getElementById('c').addEventListener('click', compare);
+
+if (window.location.hash && window.location.hash.length > 1) {
+  var v = window.location.hash.substr(1).split('|');
+
+  if (v.length === 2) {
+    document.getElementById('s1').value = decodeURIComponent(v[0]);
+    document.getElementById('s2').value = decodeURIComponent(v[1]);
+    compare();
+  }
+}
+</script>
+</body>
+</html>
