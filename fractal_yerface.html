@@ -1,0 +1,64 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grownseed - Fractal Yer Face</title>
+</head>
+<body>
+<input type="file" id="image_file" accept="image/*">
+<div id="container"></div>
+<script>
+var initial_size = 180,
+  max_depth = 5,
+  distance_ratio = 1.8,
+  img;
+
+function drawCircle(x, y, s, depth, angle) {
+  var c = document.createElement('div'),
+    offset = Math.round(s / 2);
+  c.setAttribute('style', 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + s + 'px; height: ' + s + 'px; border-radius: 50%; background-image: url("' + img + '"); margin-left: -' + offset + 'px; margin-top: -' + offset + 'px; transform: rotate(' + angle + 'deg); -webkit-transform: rotate(' + angle + 'deg); background-repeat: no-repeat; background-size: cover; opacity: 0.8;');
+  document.getElementById('container').appendChild(c);
+
+  return step(x, y, depth);
+}
+
+function step(x, y, depth) {
+  if (depth >= max_depth) return;
+
+  var size = Math.round(initial_size / depth),
+    distance = Math.round(size * distance_ratio);
+
+  depth++;
+
+  // top circle
+  drawCircle(x, y - distance, size, depth, 0);
+
+  // right circle
+  drawCircle(x + distance, y, size, depth, 90);
+
+  // bottom circle
+  drawCircle(x, y + distance, size, depth, 180);
+
+  // left circle
+  drawCircle(x - distance, y, size, depth, 270);
+
+  return;
+}
+
+document.getElementById('image_file').addEventListener('change', function() {
+  if (this.files && this.files[0]) {
+    var r = new FileReader();
+
+    r.onload = function(e) {
+      img = e.target.result;
+      document.getElementById('container').innerHTML = '';
+      step(Math.round(window.innerWidth / 2), Math.round(window.innerHeight / 2), 1);
+    };
+
+    r.readAsDataURL(this.files[0]);
+  }
+});
+</script>
+</body>
+</html>
