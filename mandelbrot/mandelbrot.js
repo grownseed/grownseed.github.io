@@ -1,25 +1,58 @@
+// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
+function hue2rgb(p, q, t) {
+  if(t < 0) t += 1;
+  if(t > 1) t -= 1;
+  if(t < 1/6) return p + (q - p) * 6 * t;
+  if(t < 1/2) return q;
+  if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+  return p;
+}
+
+function hsl2rgb(h, s, l){
+  var r, g, b;
+
+  if(s == 0){
+    r = g = b = l; // achromatic
+  }else{
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1/3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1/3);
+  }
+
+  return [
+    Math.round(r * 255),
+    Math.round(g * 255),
+    Math.round(b * 255),
+    255
+  ];
+}
+
 function drawMandelbrot() {
   var x, y, i, xt,
     cx, cy,
-    zx, zy,
-    color,
+    zx, zy, zsum,
     width = window.innerWidth,
     height = window.innerHeight,
     canvas = document.getElementById('surface'),
     context = canvas.getContext('2d'),
+    image_data = context.getImageData(0, 0, width, height),
     resolution = 4,
     offset = resolution / 2,
+    res_width = resolution / width,
+    res_height = resolution / height,
     iterations = 100;
 
   canvas.width = width;
   canvas.height = height;
 
   for(x = 0; x < width; x++) {
-    cx = -offset + resolution * (x / width);
+    cx = -offset + x * res_width;
 
     for(y = 0; y < height; y++) {
       i = 0;
-      cy = -offset + resolution * (y / height);
+      cy = -offset + y * res_height;
       zx = 0;
       zy = 0;
 
@@ -27,23 +60,22 @@ function drawMandelbrot() {
         xt = zx * zy;
         zx = zx * zx - zy * zy + cx;
         zy = offset * xt + cy;
+        zsum = zx * zx + zy * zy;
         i++;
       }
-      while(i < iterations && (zx * zx + zy * zy) < 4);
+      while(i < iterations && zsum < 4);
 
+      var index = ((y * width + x) * 4),
+        rgb = (zsum > 4 ? hsl2rgb(((i * 50 * zx / zy) % 360) / 360, .5, .5) : [0, 0, 0, 255]);
 
-      color = i.toString(16);
-      context.beginPath();
-      context.rect(x, y, 1, 1);
-      if (zx * zx + zy * zy > 4) {
-        context.fillStyle = 'hsl(' + i * 50 * zx / zy + ', 50%, 50%)';
-      }else{
-        context.fillStyle = '#000';
-      }
-
-      context.fill();
+      image_data.data[index] = rgb[0];
+      image_data.data[++index] = rgb[1];
+      image_data.data[++index] = rgb[2];
+      image_data.data[++index] = rgb[3];
     }
   }
+
+  context.putImageData(image_data, 0, 0);
 }
 
 document.addEventListener('DOMContentLoaded', drawMandelbrot);
