@@ -3,8 +3,15 @@ var colors,
   width,
   height,
   canvas,
+
+  // using buffers for faster 32-bit pixel manipulation:
+  // https://hacks.mozilla.org/2011/12/faster-canvas-pixel-manipulation-with-typed-arrays/
   context,
   image_data,
+  buf,
+  buf8,
+  data,
+
   resolution = 4,
   offset = resolution / 2,
   iterations = 100,
@@ -26,13 +33,11 @@ function hue2rgb(t) {
   return p;
 }
 
-function hsl2rgb(h){
-  return [
-    hue2rgb(h + one_third) * 255,
-    hue2rgb(h) * 255,
-    hue2rgb(h - one_third) * 255,
-    255
-  ];
+function hsl2int(h){
+  return (255 << 24) |
+    (hue2rgb(h - one_third) * 255) << 16 |
+    (hue2rgb(h) * 255) << 8 |
+    hue2rgb(h + one_third) * 255;
 }
 
 function drawMandelbrot() {
@@ -47,8 +52,11 @@ function drawMandelbrot() {
   image_data = context.getImageData(0, 0, width, height);
   res_width = resolution / width;
   res_height = resolution / height;
+  buf = new ArrayBuffer(image_data.data.length);
+  buf8 = new Uint8ClampedArray(buf);
+  data = new Uint32Array(buf);
 
-  colors = {};
+  colors = [];
 
   canvas.width = width;
   canvas.height = height;
@@ -71,35 +79,22 @@ function drawMandelbrot() {
       }
       while(i < iterations && zsum < 4);
 
-      var index = ((y * width + x) * 4);
-
-      if (zsum > 4) {
-        colors[index] = (i * 50 * zx / zy);
-      }else{
-        image_data.data[index] = 0;
-        image_data.data[++index] = 0;
-        image_data.data[++index] = 0;
-        image_data.data[++index] = 255;
-      }
+      colors[y * width + x] = zsum > 4 ? i * 50 * zx / zy : null;
     }
   }
 }
 
 function rotateHue() {
-  hue += 2;
+  hue++;
 
-  for (var index in colors) {
-    var rgb = hsl2rgb(((colors[index] + hue) % 360) / 360);
-
-    image_data.data[index] = rgb[0];
-    image_data.data[++index] = rgb[1];
-    image_data.data[++index] = rgb[2];
-    image_data.data[++index] = rgb[3];
+  for (var index = 0; index < colors.length; index++) {
+    data[index] = colors[index] ? hsl2int(((colors[index] + hue) % 360) / 360) : -16777216;
   }
 
+  image_data.data.set(buf8);
   context.putImageData(image_data, 0, 0);
 
-  return setTimeout(rotateHue, 50);
+  requestAnimationFrame(rotateHue);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
