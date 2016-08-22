@@ -3,6 +3,10 @@
   color: white;
 }
 
+#hint {
+  visibility: hidden;
+}
+
 #game {
   position: relative;
 }
