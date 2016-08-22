@@ -67,8 +67,8 @@ function clearGame() {
   game.innerHTML = '';
 }
 
-function showBoard() {
-  document.getElementById('board').style.visibility = 'visible';
+function toggleHinter(show) {
+  document.getElementById('hint').style.visibility = show ? 'visible' : 'hidden';
 }
 
 function adjustSizes() {
@@ -108,6 +108,7 @@ function nextRound() {
 
     updateBoard();
   } else {
+    toggleHinter(false);
     updateBoard(true);
   }
 }
@@ -178,7 +179,7 @@ function generateHeaps() {
     round = 0;
     current_player = 0;
     options = parseOptions();
-    showBoard();
+    toggleHinter(true);
     updateBoard();
     generateHeaps();
     drawHeaps();
