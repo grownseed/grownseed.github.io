@@ -1,0 +1,31 @@
+#board {
+  visibility: hidden;
+}
+
+.button-secondary {
+  background: rgb(66, 184, 221);
+  color: white;
+}
+
+#game {
+  position: relative;
+}
+
+#game > div {
+  position: absolute;
+  bottom: 0;
+}
+
+#game div.cell {
+  border-top: solid 30px #666;
+  padding-top: 5px;
+  cursor: pointer;
+}
+
+#game div.cell.hint {
+  border-color: #00ac00;
+}
+
+#game div.cell:hover {
+  border-color: #ac0000;
+}

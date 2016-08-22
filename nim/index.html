@@ -1,0 +1,53 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nim Game</title>
+
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link rel="stylesheet" href="nim.css">
+</head>
+<body>
+  <div id="options">
+    <form id="options_form" class="pure-form pure-form-aligned">
+      <fieldset>
+        <div class="pure-g">
+          <label for="players_nb" class="pure-u-1-2">Number of players</label>
+          <input type="number" id="players_nb" min="2" value="2" class="pure-u-1-2" required>
+        </div>
+        <div class="pure-g">
+          <label for="heaps_nb" class="pure-u-1-2">Number of heaps</label>
+          <input type="number" id="heaps_nb" min="3" value="3" class="pure-u-1-2" required>
+        </div>
+        <div class="pure-g">
+          <label for="size_min" class="pure-u-1-2">Heap size range</label>
+          <input type="number" id="size_min" min="2" value="3" class="pure-u-1-4" required>
+          <input type="number" id="size_max" min="5" value="10" class="pure-u-1-4" required>
+        </div>
+        <div class="pure-g">
+          <label for="misere_mode" class="pure-u-1-2">Game mode</label>
+          <select id="misere_mode" class="pure-u-1-2">
+            <option value="0">Normal</option>
+            <option value="1">Misere</option>
+          </select>
+        </div>
+        <button type="submit" class="pure-button pure-button-primary pure-u-1-1">
+          <strong>Start New Game</strong>
+        </button>
+      </fieldset>
+    </form>
+  </div>
+
+  <div id="board">
+    <h3 id="board_header"></h3>
+    <button type="button" id="hint" class="pure-button button-secondary">Show hint</button>
+  </div>
+
+  <div id="game"></div>
+
+  <script type="text/javascript" src="nim.js"></script>
+</body>
+</html>
