@@ -9,7 +9,11 @@ const charmap = {
 };
 
 function parseSource() {
-  let bin = [...source_input.value].map(c => {
+  let v = source_input.value;
+
+  history.replaceState(null, null, '#' + v);
+
+  let bin = [...v].map(c => {
     let d = c.charCodeAt(0).toString(2);
     return '0'.repeat(8 - d.length) + d;
   });
@@ -43,6 +47,11 @@ function init() {
   canvas = document.getElementById('canvas');
 
   source_input.addEventListener('keyup', parseSource);
+
+  if (location.hash && location.hash !== '#') {
+    source_input.value = location.hash.slice(1);
+    parseSource();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
