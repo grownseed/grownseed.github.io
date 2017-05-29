@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>BinDraw</title>
+
+  <link rel="stylesheet" href="bindraw.css">
+</head>
+
+<body>
+  <h1>BinDraw</h1>
+
+  <input id="text" type="text" placeholder="Type in to start drawing">
+
+  <div>
+    <label for="style">Style:</label>
+    <select id="style">
+      <option value="straight">Straight</option>
+      <option value="bells">Bells</option>
+      <option value="circuit">Circuit</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="width">Width:</label>
+    <input id="width" type="number" min="0">
+  </div>
+
+  <div>
+    <label for="height">Height:</label>
+    <input id="height" type="number" min="0">
+  </div>
+
+  <div>
+    <label for="padding">Padding:</label>
+    <input id="padding" type="number">
+  </div>
+
+  <div>
+    <label for="stroke">Stroke:</label>
+    <input id="stroke" type="number" min="0">
+  </div>
+
+  <div id="canvas"></div>
+
+  <script src="bindraw.js"></script>
+</body>
+</html>
