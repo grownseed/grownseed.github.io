@@ -17,6 +17,7 @@
         <input type="submit" value="submit" />
       </form>
     </div>
+    <div id="score" style="font-weight: bold;"></div>
     <ul id="tabs"></ul>
   </div>
 <script>
@@ -45,18 +46,25 @@ function checkResults ({
   mult2,
   result,
   userResult,
-  tabs
+  tabs,
+  score,
+  rating
 }) {
   const li = document.createElement('li');
   li.innerHTML = `<span>${mult1} X ${mult2} = </span>`;
 
+  rating.attempts++;
+
   if (parseInt(userResult) === parseInt(result)) {
     li.innerHTML += `<span style="color: #00ff00;">${result}</span>`;
+    rating.successes++;
   } else {
     li.innerHTML += `<span style="color: #ff0000;">${userResult}</span>
       &nbsp;
       <span style="color: #00ff00;">${result}</span>`;
   }
+
+  score.innerHTML = `Score: ${Math.round(rating.successes * 1000 / rating.attempts) / 10}%`;
   
   tabs.appendChild(li);
 }
@@ -67,7 +75,14 @@ function checkResults ({
   const mult1 = document.getElementById('mult1');
   const mult2 = document.getElementById('mult2');
 
+  const score = document.getElementById('score');
+
   const tabs = document.getElementById('tabs');
+
+  const rating = {
+    attempts: 0,
+    successes: 0
+  }
 
   let values = initMultForm({
     mult1,
@@ -85,7 +100,9 @@ function checkResults ({
     checkResults({
       ...values,
       userResult: result.value,
-      tabs
+      tabs,
+      score,
+      rating
     });
 
     values = initMultForm({
