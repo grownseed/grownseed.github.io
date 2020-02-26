@@ -1,0 +1,100 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Multiplication</title>
+</head>
+<body>
+  <div id="container">
+    <div id="quiz">
+      <form id="mult_form">
+        <input type="number" id="mult1" readonly />
+        <span class="mult_times">x</span>
+        <input type="number" id="mult2" readonly />
+        <span class="mult_equals">=</span>
+        <input type="number" id="result" />
+        <input type="submit" value="submit" />
+      </form>
+    </div>
+    <ul id="tabs"></ul>
+  </div>
+<script>
+function initMultForm ({
+  mult1,
+  mult2,
+  result
+}) {
+  const maxMult = 12;
+  const randMult1 = Math.round(Math.random() * maxMult);
+  const randMult2 = Math.round(Math.random() * maxMult);
+
+  mult1.value = randMult1;
+  mult2.value = randMult2;
+  result.value = '';
+
+  return {
+    mult1: randMult1,
+    mult2: randMult2,
+    result: randMult1 * randMult2
+  }
+}
+
+function checkResults ({
+  mult1,
+  mult2,
+  result,
+  userResult,
+  tabs
+}) {
+  const li = document.createElement('li');
+  li.innerHTML = `<span>${mult1} X ${mult2} = </span>`;
+
+  if (parseInt(userResult) === parseInt(result)) {
+    li.innerHTML += `<span style="color: #00ff00;">${result}</span>`;
+  } else {
+    li.innerHTML += `<span style="color: #ff0000;">${userResult}</span>
+      &nbsp;
+      <span style="color: #00ff00;">${result}</span>`;
+  }
+  
+  tabs.appendChild(li);
+}
+
+(function () {
+  const form = document.getElementById('mult_form');
+  const result = document.getElementById('result');
+  const mult1 = document.getElementById('mult1');
+  const mult2 = document.getElementById('mult2');
+
+  const tabs = document.getElementById('tabs');
+
+  let values = initMultForm({
+    mult1,
+    mult2,
+    result
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (result.value === '') {
+      return;
+    }
+
+    checkResults({
+      ...values,
+      userResult: result.value,
+      tabs
+    });
+
+    values = initMultForm({
+      mult1,
+      mult2,
+      result
+    });
+  });
+})();
+</script>
+</body>
+</html>
