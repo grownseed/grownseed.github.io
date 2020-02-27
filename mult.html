@@ -9,6 +9,17 @@
 
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
+
+  <style type="text/css">
+  #score_bar_success {
+    height: 5px;
+    background-color: #22aa22;
+  }
+  #score_bar_failure {
+    height: 5px;
+    background-color: #aa2222;
+  }
+  </style>
 </head>
 <body>
   <form id="mult_form" class="pure-form">
@@ -24,6 +35,10 @@
       </div>
     </fieldset>
   </form>
+  <div id="score_bar" class="pure-g">
+    <div id="score_bar_success"></div>
+    <div id="score_bar_failure"></div>
+  </div>
   <div id="container" class="pure-menu">
     <span id="score" class="pure-menu-heading"></span>
     <ul id="tabs" class="pure-menu-list"></ul>
@@ -54,11 +69,12 @@ function checkResults ({
   userResult,
   tabs,
   score,
+  scoreBar,
   rating
 }) {
   const li = document.createElement('li');
   li.setAttribute('class', 'pure-menu-item');
-  li.innerHTML = `<span>${mult1} X ${mult2} = </span>`;
+  li.innerHTML = `<span>${mult1} x ${mult2} = </span>`;
 
   rating.attempts++;
 
@@ -71,6 +87,14 @@ function checkResults ({
       <span style="color: #00ff00;">${result}</span>`;
   }
 
+  // pure css 24-based grid
+  let successRate = Math.round(rating.successes * 24 / rating.attempts);
+  let successClass = `pure-u-${successRate}-24`;
+  let failureClass = `pure-u-${24 - successRate}-24`;
+
+  scoreBar.success.setAttribute('class', successClass);
+  scoreBar.failure.setAttribute('class', failureClass);
+
   score.innerHTML = `Score: ${Math.round(rating.successes * 1000 / rating.attempts) / 10}%`;
   
   tabs.appendChild(li);
@@ -82,13 +106,17 @@ function checkResults ({
   const resultLabel = document.getElementById('result_label');
 
   const score = document.getElementById('score');
+  const scoreBar = {
+    success: document.getElementById('score_bar_success'),
+    failure: document.getElementById('score_bar_failure')
+  };
 
   const tabs = document.getElementById('tabs');
 
   const rating = {
     attempts: 0,
     successes: 0
-  }
+  };
 
   let values = initMultForm({
     resultLabel,
@@ -107,6 +135,7 @@ function checkResults ({
       userResult: result.value,
       tabs,
       score,
+      scoreBar,
       rating
     });
 
