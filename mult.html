@@ -3,35 +3,41 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Multiplication</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/grids-responsive-min.css">
 </head>
 <body>
-  <div id="container">
-    <div id="quiz">
-      <form id="mult_form">
-        <input type="number" id="mult1" readonly />
-        <span class="mult_times">x</span>
-        <input type="number" id="mult2" readonly />
-        <span class="mult_equals">=</span>
-        <input type="number" id="result" />
-        <input type="submit" value="submit" />
-      </form>
-    </div>
-    <div id="score" style="font-weight: bold;"></div>
-    <ul id="tabs"></ul>
+  <form id="mult_form" class="pure-form">
+    <h2 id="result_label"></h2>
+    <fieldset>
+      <div class="pure-g">
+        <div class="pure-u-1 pure-u-md-2-5">
+          <input type="number" id="result" class="pure-u-1" placeholder="Result..." />
+        </div>
+        <div class="pure-u-1 pure-u-md-1-5">
+          <button type="submit" class="pure-button pure-button-primary pure-u-1">Submit</button>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <div id="container" class="pure-menu">
+    <span id="score" class="pure-menu-heading"></span>
+    <ul id="tabs" class="pure-menu-list"></ul>
   </div>
 <script>
 function initMultForm ({
-  mult1,
-  mult2,
+  resultLabel,
   result
 }) {
   const maxMult = 12;
   const randMult1 = Math.round(Math.random() * maxMult);
   const randMult2 = Math.round(Math.random() * maxMult);
 
-  mult1.value = randMult1;
-  mult2.value = randMult2;
+  resultLabel.innerHTML = `${randMult1} x ${randMult2} = `;
   result.value = '';
 
   return {
@@ -51,6 +57,7 @@ function checkResults ({
   rating
 }) {
   const li = document.createElement('li');
+  li.setAttribute('class', 'pure-menu-item');
   li.innerHTML = `<span>${mult1} X ${mult2} = </span>`;
 
   rating.attempts++;
@@ -72,8 +79,7 @@ function checkResults ({
 (function () {
   const form = document.getElementById('mult_form');
   const result = document.getElementById('result');
-  const mult1 = document.getElementById('mult1');
-  const mult2 = document.getElementById('mult2');
+  const resultLabel = document.getElementById('result_label');
 
   const score = document.getElementById('score');
 
@@ -85,8 +91,7 @@ function checkResults ({
   }
 
   let values = initMultForm({
-    mult1,
-    mult2,
+    resultLabel,
     result
   });
 
@@ -106,8 +111,7 @@ function checkResults ({
     });
 
     values = initMultForm({
-      mult1,
-      mult2,
+      resultLabel,
       result
     });
   });
